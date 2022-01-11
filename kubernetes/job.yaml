@@ -1,0 +1,18 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: bekci
+spec:
+  schedule: "30 05 * * *" #GMT0
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name:  bekci
+              image: ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_IID}
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: $CI_PROJECT_ROOT_NAMESPACE-secret
